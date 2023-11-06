@@ -22,7 +22,7 @@ def online_schedule():
     # Weekdays are Monday through Thursday
 
     # Weekdays between midnight to 2pm
-    if now.weekday() < 4 and now.hour >= 0 < 13:
+    if now.weekday() < 4 and now.hour >= 0 < 14:
         return False
     # Weekends between 4am to 7am
     elif now.weekday() >= 4 and now.hour >= 4 < 7:
@@ -33,7 +33,7 @@ def online_schedule():
     # Times to turn on the server
 
     # Weekdays from 2pm to midnight
-    elif now.weekday() < 4 and now.hour >= 13 < 24:
+    elif now.weekday() < 4 and now.hour >= 14 < 24:
         return True
     # Weekdays from 7am to 4am
     elif now.weekday() >= 4 and now.hour >= 7 < 24:

@@ -7,7 +7,6 @@ from source.rcon import RCON
 from dotenv import load_dotenv
 
 load_dotenv()
-TOKEN = os.getenv('BOT_TOKEN')
 SERVER_IP = os.getenv('SERVER_IP')
 SERVER_PORT = os.getenv('SERVER_PORT')
 RCON_PASSWORD = os.getenv('RCON_PASSWORD')

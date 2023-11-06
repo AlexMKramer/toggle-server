@@ -1,4 +1,5 @@
 pytz
 holidays
 docker
-python
+rcon
+python-dotenv~=1.0.0

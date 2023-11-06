@@ -2,6 +2,16 @@ import datetime
 import pytz
 import holidays
 import docker
+import os
+from source.rcon import RCON
+from dotenv import load_dotenv
+
+load_dotenv()
+TOKEN = os.getenv('BOT_TOKEN')
+SERVER_IP = os.getenv('SERVER_IP')
+SERVER_PORT = os.getenv('SERVER_PORT')
+RCON_PASSWORD = os.getenv('RCON_PASSWORD')
+
 
 # Check current time
 now = datetime.datetime.now(pytz.timezone('America/Boise'))
@@ -21,11 +31,11 @@ def online_schedule():
 
     # Weekdays are Monday through Thursday
 
-    # Weekdays between midnight to 2pm
-    if now.weekday() < 4 and now.hour >= 0 < 14:
+    # Weekdays between midnight to 1am
+    if now.weekday() < 4 and now.hour >= 0 < 1:
         return False
     # Weekends between 4am to 7am
-    elif now.weekday() >= 4 and now.hour >= 4 < 7:
+    elif now.weekday() >= 4 and now.hour >= 4 < 5:
         return False
     # Holidays between 4am to 7am
     elif is_holiday() and now.hour >= 4 < 7:
@@ -45,7 +55,22 @@ def online_schedule():
         return False
 
 
+# Check if anyone is online
+def is_anyone_online():
+    rcon = RCON(SERVER_IP, SERVER_PORT, RCON_PASSWORD)
+    rcon.connect()
+    players = rcon.command('listplayers')
+    rcon.disconnect()
+    if players == 'No Players Connected':
+        return False
+    else:
+        return True
+
+
 try:
+    if is_anyone_online():
+        print('Someone is online, not changing server status')
+        exit()
     if online_schedule():
         # Docker client setup
         docker_client = docker.from_env()

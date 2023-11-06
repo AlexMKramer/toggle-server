@@ -3,12 +3,12 @@ import pytz
 import holidays
 import docker
 import os
-from source.rcon import RCON
+from rcon.source import Client
 from dotenv import load_dotenv
 
 load_dotenv()
 SERVER_IP = os.getenv('SERVER_IP')
-SERVER_PORT = os.getenv('SERVER_PORT')
+SERVER_PORT = int(os.getenv('SERVER_PORT'))
 RCON_PASSWORD = os.getenv('RCON_PASSWORD')
 
 
@@ -56,11 +56,9 @@ def online_schedule():
 
 # Check if anyone is online
 def is_anyone_online():
-    rcon = RCON(SERVER_IP, SERVER_PORT, RCON_PASSWORD)
-    rcon.connect()
-    players = rcon.command('listplayers')
-    rcon.disconnect()
-    if players == 'No Players Connected':
+    with Client(SERVER_IP, SERVER_PORT, passwd=RCON_PASSWORD) as client:
+        response = client.run('admincheet', 'listPlayers')
+    if response == 'No Players Connected':
         return False
     else:
         return True

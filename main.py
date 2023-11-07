@@ -57,7 +57,8 @@ def online_schedule():
 # Check if anyone is online
 def is_anyone_online():
     with Client(SERVER_IP, SERVER_PORT, passwd=RCON_PASSWORD) as client:
-        response = client.run('admincheet', 'listPlayers')
+        response = client.run('listPlayers')
+    response = response.strip()
     if response == 'No Players Connected':
         return False
     else:
@@ -65,9 +66,6 @@ def is_anyone_online():
 
 
 try:
-    if is_anyone_online():
-        print('Someone is online, not changing server status')
-        exit()
     if online_schedule():
         # Docker client setup
         docker_client = docker.from_env()
@@ -87,6 +85,9 @@ try:
         container = docker_client.containers.get('ark-server')
         # If it is running, stop it.
         if container.status == 'running':
+            if is_anyone_online():
+                print('Someone is online, not changing server status')
+                exit()
             print('Server is running, stopping now')
             container.stop()
         else:
